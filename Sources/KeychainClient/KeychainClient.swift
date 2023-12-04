@@ -125,7 +125,7 @@ open class KeychainClient {
     private let keychain: KeychainProtocol
 
     // Mockable init
-    init(keychain: KeychainProtocol = Keychain()) {
+    public init(keychain: KeychainProtocol = Keychain()) {
         self.keychain = keychain
     }
 }
@@ -204,7 +204,7 @@ public enum KeychainError: LocalizedError {
 }
 
 
-internal protocol KeychainProtocol {
+public protocol KeychainProtocol {
     typealias KeychainItemAttributes = [CFString: Any]
 
     func readItem<T: Decodable>(
@@ -236,7 +236,8 @@ internal protocol KeychainProtocol {
     func deleteAllItems() throws
 }
 
-internal final class Keychain: KeychainProtocol {
+public final class Keychain: KeychainProtocol {
+    public init() {}
 }
 
 extension Keychain {
@@ -247,7 +248,7 @@ extension Keychain {
     ///   - key: The kSecAttrAccount under which the item was initially saved
     ///   - attributes: Any additional attributes
     /// - Throws: A KeychainError if something fails
-    func readItem<T: Decodable>(
+    public func readItem<T: Decodable>(
         ofClass itemClass: KeychainItemClass,
         atKey key: String,
         withAttributes attributes: KeychainItemAttributes? = nil
@@ -293,7 +294,7 @@ extension Keychain {
     ///   - key: The kSecAttrAccount under which the item will be saved
     ///   - attributes: Any additional attributes
     /// - Throws: A KeychainError if something fails
-    func saveItem<T: Encodable>(
+    public func saveItem<T: Encodable>(
         _ item: T,
         ofClass itemClass: KeychainItemClass,
         atKey key: String,
@@ -330,7 +331,7 @@ extension Keychain {
     ///   - key: The kSecAttrAccount we wish to update
     ///   - attributes: Any additional attributes
     /// - Throws: A KeychainError if something fails
-    func updateItem<T: Encodable>(
+    public func updateItem<T: Encodable>(
         _ item: T,
         ofClass itemClass: KeychainItemClass,
         atKey key: String,
@@ -369,7 +370,7 @@ extension Keychain {
     ///   - key: The kSecAttrAccount we wish to delete
     ///   - attributes: Any additional attributes
     /// - Throws: A KeychainError if something fails
-    func deleteItem(
+    public func deleteItem(
         ofClass itemClass: KeychainItemClass,
         atKey key: String,
         withAttributes attributes: KeychainItemAttributes? = nil
@@ -397,7 +398,7 @@ extension Keychain {
     /// Delete all the values accessible to the app from the keychain.
     ///
     /// - Throws: An error of type `KeychainError`
-    func deleteAllItems() throws {
+    public func deleteAllItems() throws {
         for itemClass in KeychainItemClass.allCases {
             let secItemClass = itemClass.rawValue
             let dict: KeychainItemAttributes = [kSecClass: secItemClass]

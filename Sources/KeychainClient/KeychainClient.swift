@@ -3,7 +3,7 @@
 
 import Foundation
 
-open class KeychainClient {
+public class KeychainClient {
     /**
      Read an item previously stored to the Keychain.
 
